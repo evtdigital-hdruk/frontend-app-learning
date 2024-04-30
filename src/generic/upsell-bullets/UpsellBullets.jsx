@@ -24,7 +24,7 @@ export const VerifiedCertBullet = () => {
       <CheckmarkBullet />
       <FormattedMessage
         id="learning.generic.upsell.verifiedCertBullet"
-        defaultMessage="Earn a {verifiedCertLink} of completion to showcase on your resumé"
+        defaultMessage="Earn a {verifiedCertLink} of completion to showcase on your CV."
         description="Bullet showcasing benefit of earned credential."
         values={{ verifiedCertLink }}
       />
@@ -86,7 +86,7 @@ export const SupportMissionBullet = () => {
     <span className="font-weight-bold">
       <FormattedMessage
         id="learning.generic.upsell.supportMissionBullet.mission"
-        defaultMessage="mission"
+        defaultMessage="LinkedIn"
         description="Bolded word 'mission', which is the bolded portion of a bullet point encouraging the learner to support the goals of the website."
       />
     </span>
@@ -96,7 +96,7 @@ export const SupportMissionBullet = () => {
       <CheckmarkBullet />
       <FormattedMessage
         id="learning.generic.upsell.supportMissionBullet"
-        defaultMessage="Support our {missionInBoldText} at {siteName}"
+        defaultMessage="Share your certificate with employers, or on your {missionInBoldText} profile to highlight your skills."
         description="Bullet encouraging user to support edX's goals."
         values={{ missionInBoldText, siteName: getConfig().SITE_NAME }}
       />
