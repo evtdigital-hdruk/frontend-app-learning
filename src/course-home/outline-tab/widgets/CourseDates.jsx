@@ -15,7 +15,7 @@ const CourseDates = ({
   } = useSelector(state => state.courseHome);
   const {
     userTimezone,
-    isSelfPaced
+    isSelfPaced,
   } = useModel('courseHomeMeta', courseId);
   const {
     datesWidget: {
@@ -23,7 +23,6 @@ const CourseDates = ({
       datesTabLink,
     },
   } = useModel('outline', courseId);
-
 
   if (courseDateBlocks.length === 0 || isSelfPaced) {
     return null;
