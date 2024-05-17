@@ -8,7 +8,7 @@ const messages = defineMessages({
   },
   launchTour: {
     id: 'tours.button.launchTour',
-    defaultMessage: 'Launch tour',
+    defaultMessage: 'How to navigate a course',
     description: 'A button used to launch a tour of the website',
   },
   newUserModalBody: {
