@@ -5,6 +5,7 @@ import {
   Button,
 } from '@edx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import { sendActivationEmail } from '../../courseware/data';
 import messages from './messages';
 
@@ -40,17 +41,25 @@ const AccountActivationAlert = ({
   }, [showAccountActivationAlert]);
 
   const button = (
-    <Button
-      variant="danger"
-      className=""
-      disabled={waitForResend}
-      onClick={handleOnClick}
-    >
-      {
+    <div className="w-100 d-flex flex-column justify-content-center my-3">
+      <Button className="mx-auto" variant="danger" href={`${getConfig().LMS_BASE_URL}/dashboard`}>
+        <FormattedMessage
+          id="account-activation.email.confirmed"
+          defaultMessage="I've confirmed my email"
+          description="Message for confirmed email"
+        />
+      </Button>
+      <Button
+        variant="link"
+        className=""
+        disabled={waitForResend}
+        onClick={handleOnClick}
+      >
+        {
         waitForResend
           ? (
             <FormattedMessage
-              id="account-activation.resend.link"
+              id="account-activation.resend.link.disabled"
               defaultMessage={`Resend verification email (${timeLeft}s)`}
               description="Message for resending link in account activation alert which is shown after the registration"
             />
@@ -63,7 +72,8 @@ const AccountActivationAlert = ({
             />
           )
       }
-    </Button>
+      </Button>
+    </div>
   );
 
   const children = () => {
