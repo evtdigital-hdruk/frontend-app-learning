@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
   AlertModal,
   Button,
-  Spinner,
-  Icon,
 } from '@openedx/paragon';
-import { Check, ArrowForward } from '@openedx/paragon/icons';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import { sendActivationEmail } from '../../courseware/data';
 import messages from './messages';
 
@@ -17,99 +13,82 @@ const AccountActivationAlert = ({
   intl,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const [showSpinner, setShowSpinner] = useState(false);
-  const [showCheck, setShowCheck] = useState(false);
+  const [waitForResend, setWaitForResend] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    let timer;
+    if (waitForResend && timeLeft > 0) {
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    } else if (timeLeft === 0) {
+      setWaitForResend(false);
+    }
+    return () => clearTimeout(timer);
+  }, [waitForResend, timeLeft]);
+
   const handleOnClick = () => {
-    setShowSpinner(true);
-    setShowCheck(false);
+    setWaitForResend(true);
+    setTimeLeft(60);
     sendActivationEmail().then(() => {
-      setShowSpinner(false);
-      setShowCheck(true);
     });
   };
 
   const showAccountActivationAlert = Cookies.get('show-account-activation-popup');
-  if (showAccountActivationAlert !== undefined) {
-    Cookies.remove('show-account-activation-popup', { path: '/', domain: process.env.SESSION_COOKIE_DOMAIN });
-    // extra check to make sure cookie was removed before updating the state. Updating the state without removal
-    // of cookie would make it infinite rendering
-    if (Cookies.get('show-account-activation-popup') === undefined) {
+  useEffect(() => {
+    if (Cookies.get('show-account-activation-popup') === 'True') {
       setShowModal(true);
     }
-  }
+  }, [showAccountActivationAlert]);
 
   const button = (
-    <Button
-      variant="primary"
-      className=""
-      onClick={() => setShowModal(false)}
-    >
-      <FormattedMessage
-        id="account-activation.alert.button"
-        defaultMessage="Continue to {siteName}"
-        description="account activation alert continue button"
-        values={{
-          siteName: getConfig().SITE_NAME,
-        }}
-      />
-      <Icon src={ArrowForward} className="ml-1 d-inline-block align-bottom" />
-    </Button>
+    <div className="w-100 d-flex flex-column justify-content-center my-3">
+      <Button className="mx-auto" variant="danger" href={`${getConfig().LMS_BASE_URL}/dashboard`}>
+        <FormattedMessage
+          id="account-activation.email.confirmed"
+          defaultMessage="I've confirmed my email"
+          description="Message for confirmed email"
+        />
+      </Button>
+      <Button
+        variant="link"
+        className=""
+        disabled={waitForResend}
+        onClick={handleOnClick}
+      >
+        {
+        waitForResend
+          ? (
+            <FormattedMessage
+              id="account-activation.resend.link.disabled"
+              defaultMessage={`Resend verification email (${timeLeft}s)`}
+              description="Message for resending link in account activation alert which is shown after the registration"
+            />
+          )
+          : (
+            <FormattedMessage
+              id="account-activation.resend.link"
+              defaultMessage="Resend verification email"
+              description="Message for resending link in account activation alert which is shown after the registration"
+            />
+          )
+      }
+      </Button>
+    </div>
   );
 
   const children = () => {
-    let bodyContent;
     const message = (
       <FormattedMessage
         id="account-activation.alert.message"
-        defaultMessage="We sent an email to {boldEmail} with a link to activate your account. Can’t find it? Check your spam folder or
-        {sendEmailTag}."
+        defaultMessage="We've sent you an email to verify your account. Please check your inbox to confirm and keep learning."
         description="Message for account activation alert which is shown after the registration"
-        values={{
-          boldEmail: <b>{getAuthenticatedUser() && getAuthenticatedUser().email}</b>,
-          sendEmailTag: (
-          // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            <a href="#" role="button" onClick={handleOnClick}>
-              <FormattedMessage
-                id="account-activation.resend.link"
-                defaultMessage="resend the email"
-                description="Message for resend link in account activation alert which is shown after the registration"
-              />
-            </a>
-          ),
-        }}
       />
     );
-    bodyContent = (
+    const bodyContent = (
       <div>
         {message}
       </div>
     );
-
-    if (!showCheck && showSpinner) {
-      bodyContent = (
-        <div>
-          {message}
-          <Spinner
-            animation="border"
-            variant="secondary"
-            style={{ height: '1.5rem', width: '1.5rem' }}
-          />
-        </div>
-      );
-    }
-
-    if (showCheck && !showSpinner) {
-      bodyContent = (
-        <div>
-          {message}
-          <Icon
-            src={Check}
-            style={{ height: '1.7rem', width: '1.25rem' }}
-            className="text-success-500 d-inline-block position-fixed"
-          />
-        </div>
-      );
-    }
     return bodyContent;
   };
 
