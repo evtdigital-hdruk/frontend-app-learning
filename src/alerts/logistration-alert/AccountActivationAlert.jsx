@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import {
   AlertModal,
   Button,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
 import { sendActivationEmail } from '../../courseware/data';

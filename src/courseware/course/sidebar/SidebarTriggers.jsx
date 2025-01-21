@@ -1,6 +1,6 @@
+import { useContext } from 'react';
 import classNames from 'classnames';
-import React, { useContext } from 'react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 import SidebarContext from './SidebarContext';
 import { SIDEBAR_ORDER, SIDEBARS } from './sidebars';
 

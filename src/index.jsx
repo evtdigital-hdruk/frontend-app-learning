@@ -98,6 +98,7 @@ subscribe(APP_READY, () => {
               />
               {DECODE_ROUTES.PROGRESS.map((route) => (
                 <Route
+                  key={route}
                   path={route}
                   element={(
                     <DecodePageRoute>
@@ -125,6 +126,7 @@ subscribe(APP_READY, () => {
               />
               {DECODE_ROUTES.COURSEWARE.map((route) => (
                 <Route
+                  key={route}
                   path={route}
                   element={(
                     <DecodePageRoute>
