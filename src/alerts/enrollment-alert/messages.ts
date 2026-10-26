@@ -22,6 +22,21 @@ const messages = defineMessages({
     defaultMessage: 'Enroll now.',
     description: 'A link prompting the user to click on it to enroll in the currently viewed course.',
   },
+  purchaseAlert: {
+    id: 'learning.enrollment.purchaseAlert',
+    defaultMessage: 'This course must be purchased to see course content.',
+    description: 'Message shown to indicate that a user needs to buy a course that has no free enrolment mode. Shown as part of an alert, along with a link to buy.',
+  },
+  buyAccessInline: {
+    id: 'learning.enrollment.buyAccess.Inline',
+    defaultMessage: 'Buy access',
+    description: 'A link to the purchase page for the currently viewed course. Used at the beginning of a sentence (example: Buy access to view course content.)',
+  },
+  buyAccessSentence: {
+    id: 'learning.enrollment.buyAccess.Sentence',
+    defaultMessage: 'Buy access.',
+    description: 'A link to the purchase page for the currently viewed course.',
+  },
   success: {
     id: 'learning.enrollment.success',
     defaultMessage: "You've successfully enrolled in this course!",

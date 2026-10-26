@@ -3,6 +3,7 @@ import React, { useContext, useMemo } from 'react';
 import { AppContext } from '@edx/frontend-platform/react';
 import { ALERT_TYPES, useAlert } from '../../../../generic/user-messages';
 import { useModel } from '../../../../generic/model-store';
+import { requiresPurchase } from '../../../../alerts/enrollment-alert/purchase';
 
 const PrivateCourseAlert = React.lazy(() => import('./PrivateCourseAlert'));
 
@@ -22,7 +23,8 @@ export function usePrivateCourseAlert(courseId) {
     anonymousUser: authenticatedUser === null,
     canEnroll: outline && outline.enrollAlert ? outline.enrollAlert.canEnroll : false,
     courseId,
-  }), [authenticatedUser, courseId, outline]);
+    requiresPurchase: requiresPurchase(course && course.courseModes),
+  }), [authenticatedUser, course, courseId, outline]);
 
   useAlert(isVisible, {
     code: 'clientPrivateCourseAlert',

@@ -6,6 +6,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 
 import { useAlert } from '../../generic/user-messages';
 import { useModel } from '../../generic/model-store';
+import { requiresPurchase } from './purchase';
 
 const EnrollmentAlert = React.lazy(() => import('./EnrollmentAlert'));
 
@@ -27,6 +28,7 @@ export function useEnrollmentAlert(courseId) {
     courseId,
     extraText: outline && outline.enrollAlert ? outline.enrollAlert.extraText : '',
     isStaff: course && course.isStaff,
+    requiresPurchase: requiresPurchase(course && course.courseModes),
   }), [course, courseId, outline]);
 
   useAlert(isVisible, {
