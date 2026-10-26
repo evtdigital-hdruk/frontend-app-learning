@@ -609,6 +609,36 @@ describe('Outline Tab', () => {
         expect(screen.getByRole('button', { name: 'Enroll now' })).toBeInTheDocument();
       });
 
+      it('links to the buy view instead of enrolling when the course has no free mode', async () => {
+        setMetadata({
+          course_modes: [{ slug: 'verified', name: 'Verified Certificate' }],
+        });
+        await fetchAndRender();
+
+        await screen.findByTestId('private-course-alert');
+        const link = screen.getByRole('link', { name: 'Buy access' });
+        expect(link).toHaveAttribute(
+          'href',
+          `${getConfig().LMS_BASE_URL}/hdruk/commerce/buy/?course_run_key=${encodeURIComponent(courseId)}`,
+        );
+        expect(screen.queryByRole('button', { name: 'Enroll now' })).not.toBeInTheDocument();
+        expect(axiosMock.history.post).toHaveLength(0);
+      });
+
+      it('keeps the enrol button when the course has a free mode', async () => {
+        setMetadata({
+          course_modes: [
+            { slug: 'audit', name: 'Audit' },
+            { slug: 'verified', name: 'Verified Certificate' },
+          ],
+        });
+        await fetchAndRender();
+
+        await screen.findByTestId('private-course-alert');
+        expect(screen.getByRole('button', { name: 'Enroll now' })).toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Buy access' })).not.toBeInTheDocument();
+      });
+
       it('handles button click', async () => {
         const { location } = window;
         delete window.location;

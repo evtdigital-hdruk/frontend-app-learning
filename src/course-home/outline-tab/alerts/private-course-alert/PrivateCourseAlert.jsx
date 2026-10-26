@@ -12,6 +12,7 @@ import genericMessages from '../../../../generic/messages';
 import messages from './messages';
 import outlineMessages from '../../messages';
 import useEnrollClickHandler from '../../../../alerts/enrollment-alert/clickHook';
+import { buyUrl } from '../../../../alerts/enrollment-alert/purchase';
 import { useModel } from '../../../../generic/model-store';
 
 const PrivateCourseAlert = ({ payload }) => {
@@ -20,6 +21,7 @@ const PrivateCourseAlert = ({ payload }) => {
     anonymousUser,
     canEnroll,
     courseId,
+    requiresPurchase,
   } = payload;
 
   const {
@@ -44,6 +46,16 @@ const PrivateCourseAlert = ({ payload }) => {
     >
       {intl.formatMessage(enrollmentMessages.enrollNowInline)}
     </Button>
+  );
+
+  const buyAccessLink = (
+    <Hyperlink
+      className="mr-1"
+      style={{ textDecoration: 'underline' }}
+      destination={buyUrl(courseId)}
+    >
+      {intl.formatMessage(enrollmentMessages.buyAccessInline)}
+    </Hyperlink>
   );
 
   const register = (
@@ -87,7 +99,7 @@ const PrivateCourseAlert = ({ payload }) => {
           <p className="font-weight-bold">{intl.formatMessage(outlineMessages.welcomeTo)} {title}</p>
           {canEnroll && (
             <div className="d-flex">
-              {enrollNowButton}
+              {requiresPurchase ? buyAccessLink : enrollNowButton}
               {intl.formatMessage(messages.toAccess)}
               {loading && <FontAwesomeIcon icon={faSpinner} spin />}
             </div>
@@ -108,6 +120,7 @@ PrivateCourseAlert.propTypes = {
     anonymousUser: PropTypes.bool,
     canEnroll: PropTypes.bool,
     courseId: PropTypes.string,
+    requiresPurchase: PropTypes.bool,
   }).isRequired,
 };
 
